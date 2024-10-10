@@ -9,23 +9,31 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import os
+import datetime
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load environment variables from .env file
+load_dotenv()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
+# Get the project secret key from the environment variable
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-1-ch_z(13e@k7$a$#%ae^4p#nqle6(2aw_d3ezh=lse=af-o3f"
+SECRET_KEY = SECRET_KEY = os.environ.get('PROJECT_SECRET_KEY', 'default')
 
+# Get the debug mode from the environment variable
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+env_development = os.environ.get('ENV_DEVELOPMENT', 'false')
+DEBUG = env_development.lower() == 'true'
 
-ALLOWED_HOSTS = []
+# Get the allowed hosts from the environment variable
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
 
 
 # Application definition
@@ -37,11 +45,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -50,6 +60,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "ChronoTube.urls"
+
+# Get the CORS allowed origins from the environment variable
+CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:3000').split(',')
 
 TEMPLATES = [
     {
@@ -73,10 +86,15 @@ WSGI_APPLICATION = "ChronoTube.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# Databse Configuration
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": os.getenv("DB_ENGINE", "django.db.backends.mysql"),
+        "NAME": os.getenv("DB_NAME", "spapi"),
+        "USER": os.getenv("DB_USER", "root"),
+        "PASSWORD": os.getenv("DB_PASSWORD", "password"),
+        "HOST": os.getenv("DB_HOST", "127.0.0.1"),
+        "PORT": os.getenv("DB_PORT", "3306"),
     }
 }
 
