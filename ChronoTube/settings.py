@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    "core",
+    "django_celery_beat",
+    "cronApp",
 ]
 
 MIDDLEWARE = [
