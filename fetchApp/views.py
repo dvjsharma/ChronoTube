@@ -43,12 +43,12 @@ def get_videos(request):
     paginator = Paginator(videos, limit)
     videos_page = paginator.get_page(page)
 
-    serializer = VideoSerializer(videos_page, many=True)
+    video_dicts = [VideoSerializer(video).to_dict() for video in videos_page]
 
     return Response({
         'total': paginator.count,
         'pages': paginator.num_pages,
-        'videos': serializer.data,
+        'videos': video_dicts,
         'next': (
             request.build_absolute_uri(
                 reverse('get-videos') + f'?page={videos_page.next_page_number()}&limit={limit}&sortOrder={sort_order}'

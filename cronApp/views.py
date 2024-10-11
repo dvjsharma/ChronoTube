@@ -33,7 +33,7 @@ def start_fetching(request):
     Returns:
         Response: A DRF Response object containing the status of the fetching operation.
     """
-    query = request.data.get('query', settings.DEFAULT_QUERY)
+    query = request.GET.get('query', settings.DEFAULT_QUERY)
 
     try:
         start_fetch_task(query)
