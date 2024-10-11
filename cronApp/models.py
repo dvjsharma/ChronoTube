@@ -5,25 +5,28 @@ class Video(models.Model):
     Model representing a video with relevant metadata.
     
     Attributes:
-        video_id (str): Unique identifier for the video, serving as the primary key.
+        video_id: Unique identifier for the video, serving as the primary key.
         title: Title of the video.
         description: Detailed description of the video content.
         publishedAt: Date and time when the video was published.
         thumbnail_url: URL of the video's thumbnail image.
+        addedAt: Date and time when the video was added to the database.
     """
 
-    video_id = models.CharField(max_length=255, primary_key=True)
-    title = models.CharField(max_length=255)
-    description = models.TextField()
-    publishedAt = models.DateTimeField()
-    thumbnail_url = models.URLField()
+    video_id = models.CharField(max_length=11, primary_key=True)
+    title = models.CharField(max_length=100, null=False)
+    description = models.TextField(null=True)
+    publishedAt = models.DateTimeField(null=False)
+    thumbnail_url = models.URLField(null=True)
+    addedAt = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         """
         Meta options for the Video model.
         """
-        # Index to optimize queries based on the publication date
         indexes = [
+            models.Index(fields=['title']),    
+            models.Index(fields=['description']),
             models.Index(fields=['publishedAt']),
         ]
 

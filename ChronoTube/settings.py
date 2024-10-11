@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_celery_beat",
     "cronApp",
+    "fetchApp",
 ]
 
 MIDDLEWARE = [
@@ -193,6 +194,11 @@ LOGGING = {
             "propagate": False,
         },
         "cronApp": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+            "propagate": False,
+        },
+        "fetchApp": {
             "handlers": ["console"],
             "level": "DEBUG",
             "propagate": False,
