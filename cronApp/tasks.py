@@ -12,14 +12,20 @@ logger = logging.getLogger(__name__)
 
 YOUTUBE_API_KEYS = settings.YOUTUBE_API_KEYS
 API_MAP = [
-    {'key': key, 'last_used': 0, 'error_count': 0} 
+    {'key': key, 'last_used': 0, 'error_count': 0}
     for key in YOUTUBE_API_KEYS
 ]
 CURRENT_KEY_INDEX = 0
 
-def get_videos_from_youtube(query):
 
-    global CURRENT_KEY_INDEX  
+def get_videos_from_youtube(query):
+    """
+    Fetches videos from YouTube API using the given query
+
+    Algorithm: Round-robin through the API keys and use the first one that is not exhausted
+    """
+
+    global CURRENT_KEY_INDEX
     search_url = 'https://www.googleapis.com/youtube/v3/search'
 
     for _ in range(len(API_MAP)):
@@ -46,18 +52,21 @@ def get_videos_from_youtube(query):
                 logger.warning(f"API key exhausted: {key}")
             else:
                 API_MAP[CURRENT_KEY_INDEX]['error_count'] += 1
-                logger.error(f"Error fetching videos with API key: {key}: {e}")
+                logger.error(f"Error fetching videos with API key: {key}")
         except Exception as e:
             API_MAP[CURRENT_KEY_INDEX]['error_count'] += 1
             logger.error(f"Error fetching videos with API key: {key}: {e}")
-
 
         CURRENT_KEY_INDEX = (CURRENT_KEY_INDEX + 1) % len(API_MAP)
 
     return []
 
+
 @shared_task
 def fetch_latest_videos(query):
+    """
+    Fetches latest videos from YouTube API using the given query and saves them to the database.
+    """
     videos = get_videos_from_youtube(query)
 
     video_objects = []
@@ -76,7 +85,11 @@ def fetch_latest_videos(query):
     except IntegrityError as e:
         logger.error(f"Error while saving videos: {e}")
 
+
 def start_fetch_task(query):
+    """
+    Starts a periodic task to fetch latest videos for the given query.
+    """
     schedule, _ = IntervalSchedule.objects.get_or_create(
         every=10,
         period=IntervalSchedule.SECONDS
@@ -88,5 +101,9 @@ def start_fetch_task(query):
         args=json.dumps([query])
     )
 
+
 def stop_fetch_task():
+    """
+    Stops the periodic task to fetch latest videos.
+    """
     PeriodicTask.objects.filter(task='cronApp.tasks.fetch_latest_videos').delete()

@@ -1,9 +1,10 @@
 from django.db import models
 
+
 class Video(models.Model):
     """
     Model representing a video with relevant metadata.
-    
+
     Attributes:
         video_id: Unique identifier for the video, serving as the primary key.
         title: Title of the video.
@@ -25,7 +26,7 @@ class Video(models.Model):
         Meta options for the Video model.
         """
         indexes = [
-            models.Index(fields=['title']),    
+            models.Index(fields=['title']),
             models.Index(fields=['description']),
             models.Index(fields=['publishedAt']),
         ]
