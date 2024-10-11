@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "corsheaders",
     "rest_framework",
     "django_celery_beat",
     "drf_yasg",
@@ -65,7 +66,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = "ChronoTube.urls"
 
 # Get the CORS allowed origins from the environment variable
-CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:3000').split(',')
+CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:5173').split(',')
 
 TEMPLATES = [
     {

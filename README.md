@@ -6,6 +6,11 @@
 
 ChronoTube is an API that fetches and organizes the latest YouTube videos based on a specified search query. It continuously polls the YouTube API to gather video data, including titles, descriptions, publish dates, and thumbnail URLs, storing this information in a database. The API provides a paginated response of the stored videos, sorted in reverse chronological order. ChronoTube is designed for scalability and performance, with support for multiple API keys to manage quota limits efficiently.
 
+## 🔗 Links
+
+- Link to the documentation: [SwaggerHub hosted docs](https://app.swaggerhub.com/apis/DIVIJS75_1/ChronoTube/v1)
+- Link to the dashboard: [ChronoTube Dashboard](https://github.com/dvjsharma/ChronoTube_Client)
+- Link to a video demo: [ChronoTube Demo](https://drive.google.com/drive/folders/1XIPPzRPNPOA-hBTvK0OD70gl6-rXFoVe?usp=sharing)
 
 ## 💻Tech Stack
 
