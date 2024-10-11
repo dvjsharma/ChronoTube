@@ -9,6 +9,19 @@ from django.urls import reverse
 
 @api_view(['GET'])
 def get_videos(request):
+    """
+    Get a paginated list of YouTube videos based on the search query.
+
+    This endpoint returns a paginated list of YouTube videos based on the search query
+    provided in the request. The videos are sorted by the published date in descending
+    order by default.
+
+    Args:
+        request (Request): The request object containing the query parameters.
+
+    Returns:
+        Response: A DRF Response object containing the paginated list of videos.
+    """
     query = request.GET.get('query', '')
     page = request.GET.get('page', 1)
     limit = request.GET.get('limit', 10)
