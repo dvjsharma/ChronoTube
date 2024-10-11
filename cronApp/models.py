@@ -6,12 +6,12 @@ class Video(models.Model):
     Model representing a video with relevant metadata.
 
     Attributes:
-        video_id: Unique identifier for the video, serving as the primary key.
-        title: Title of the video.
-        description: Detailed description of the video content.
-        publishedAt: Date and time when the video was published.
-        thumbnail_url: URL of the video's thumbnail image.
-        addedAt: Date and time when the video was added to the database.
+        video_id (str): Unique identifier for the video, serving as the primary key.
+        title (str): Title of the video.
+        description (str): Detailed description of the video content.
+        publishedAt (datetime): Date and time when the video was published.
+        thumbnail_url (str): URL of the video's thumbnail image.
+        addedAt (datetime): Date and time when the video was added to the database.
     """
 
     video_id = models.CharField(max_length=11, primary_key=True)
@@ -34,5 +34,8 @@ class Video(models.Model):
     def __str__(self):
         """
         String representation of the Video model.
+
+        Returns:
+            str: Title of the video.
         """
         return self.title

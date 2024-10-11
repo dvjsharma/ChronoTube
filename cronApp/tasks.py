@@ -20,9 +20,15 @@ CURRENT_KEY_INDEX = 0
 
 def get_videos_from_youtube(query):
     """
-    Fetches videos from YouTube API using the given query
+    Fetches videos from YouTube API using the given query.
 
-    Algorithm: Round-robin through the API keys and use the first one that is not exhausted
+    Algorithm: Round-robin through the API keys and use the first one that is not exhausted.
+
+    Args:
+        query (str): The search query for fetching videos.
+
+    Returns:
+        list: A list of video items from the YouTube API.
     """
 
     global CURRENT_KEY_INDEX
@@ -65,7 +71,13 @@ def get_videos_from_youtube(query):
 @shared_task
 def fetch_latest_videos(query):
     """
-    Fetches latest videos from YouTube API using the given query and saves them to the database.
+    Fetches the latest videos from YouTube API using the given query and saves them to the database.
+
+    Args:
+        query (str): The search query for fetching videos.
+
+    Returns:
+        None
     """
     videos = get_videos_from_youtube(query)
 
@@ -88,7 +100,13 @@ def fetch_latest_videos(query):
 
 def start_fetch_task(query):
     """
-    Starts a periodic task to fetch latest videos for the given query.
+    Starts a periodic task to fetch the latest videos for the given query.
+
+    Args:
+        query (str): The search query for fetching videos.
+
+    Returns:
+        None
     """
     schedule, _ = IntervalSchedule.objects.get_or_create(
         every=10,
@@ -104,6 +122,9 @@ def start_fetch_task(query):
 
 def stop_fetch_task():
     """
-    Stops the periodic task to fetch latest videos.
+    Stops the periodic task to fetch the latest videos.
+
+    Returns:
+        None
     """
     PeriodicTask.objects.filter(task='cronApp.tasks.fetch_latest_videos').delete()
