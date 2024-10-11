@@ -4,6 +4,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from fetchApp.serializers import VideoSerializer
 from cronApp.models import Video
+from django.urls import reverse
 
 @api_view(['GET'])
 def get_videos(request):
@@ -27,12 +28,24 @@ def get_videos(request):
         
     videos = videos.order_by(sort_field)
     paginator = Paginator(videos, limit)
-    videos = paginator.get_page(page)
+    videos_page = paginator.get_page(page)
     
-    serializer = VideoSerializer(videos, many=True)
+    serializer = VideoSerializer(videos_page, many=True)
 
     return Response({
         'total': paginator.count,
         'pages': paginator.num_pages,
-        'videos': serializer.data
+        'videos': serializer.data,
+        'next': (
+            request.build_absolute_uri(
+                reverse('get-videos') + f'?page={videos_page.next_page_number()}&limit={limit}&sortOrder={sort_order}'
+                + (f'&query={query}' if query else '')
+            ) if videos_page.has_next() else None
+        ),
+        'previous': (
+            request.build_absolute_uri(
+                reverse('get-videos') + f'?page={videos_page.previous_page_number()}&limit={limit}&sortOrder={sort_order}'
+                + (f'&query={query}' if query else '')
+            ) if videos_page.has_previous() else None
+        ),
     })
