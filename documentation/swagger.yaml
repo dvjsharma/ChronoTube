@@ -1,0 +1,128 @@
+swagger: '2.0'
+info:
+  title: ChronoTube
+  description: API to fetch latest videos sorted in reverse chronological order of their publishing date-time from YouTube for a given tag/search query in a paginated response.
+  contact:
+    email: divijs75@gmail.com
+  version: v1
+host: 127.0.0.1:8000
+schemes:
+- http
+basePath: /api/v1
+consumes:
+- application/json
+produces:
+- application/json
+securityDefinitions:
+  Basic:
+    type: basic
+security:
+- Basic: []
+paths:
+  /cron/start/:
+    post:
+      operationId: cron_start_create
+      summary: Start fetching YouTube videos for the given query.
+      description: |-
+        This endpoint initiates a background task to fetch the latest YouTube videos
+        based on the provided search query. If no query is provided, a default query
+        will be used.
+      parameters:
+        - name: query
+          in: query
+          description: The search query to fetch YouTube videos.
+          required: false
+          type: string
+      responses:
+        '200':
+          description: The background task has been initiated successfully.
+        '500':
+          description: An error occurred while initiating the background task.
+      tags:
+      - cron
+  /cron/stop/:
+    post:
+      operationId: cron_stop_create
+      summary: Stop fetching YouTube videos.
+      description: This endpoint halts any ongoing background tasks that are fetching
+        YouTube videos.
+      responses:
+        '200':
+          description: The background task has been stopped successfully.
+        '500':
+          description: An error occurred while stopping the background task.
+      tags:
+      - cron
+  /fetch/videos/:
+    get:
+      operationId: fetch_videos_list
+      summary: Get a paginated list of YouTube videos based on the search query.
+      description: |-
+        This endpoint returns a paginated list of YouTube videos based on the search query
+        provided in the request. The videos are sorted by the published date in descending
+        order by default.
+      parameters: 
+        - name: query
+          in: query
+          description: The search query to fetch YouTube videos.
+          required: false
+          type: string
+        - name: page
+          in: query
+          description: The page number for paginated response.
+          required: false
+          type: integer
+        - name: limit
+          in: query
+          description: The number of items per page in the paginated response.
+          required: false
+          type: integer
+        - name: sortOrder
+          in: query
+          description: The order in which the videos should be sorted.
+          required: false
+          type: string
+          enum:
+            - asc
+            - desc
+      responses:
+        '200':
+          description: A paginated list of YouTube videos.
+          schema:
+            type: object
+            properties:
+              total:
+                type: integer
+                description: The total number of videos fetched.
+              pages:
+                type: integer
+                description: The total number of pages.
+              videos:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    videoId:
+                      type: string
+                      description: The unique identifier for the video.
+                    title:
+                      type: string
+                      description: The title of the video.
+                    description:
+                      type: string
+                      description: The description of the video.
+                    publishedAt:
+                      type: string
+                      description: The date and time when the video was published.
+                    thumbnailUrl:
+                      type: string
+                      description: The URL of the video's thumbnail.
+              next:
+                type: string
+                description: The URL for the next page of videos.
+              previous:
+                type: string
+                description: The URL for the previous page of videos.
+      tags:
+      - fetch
+definitions: {}
